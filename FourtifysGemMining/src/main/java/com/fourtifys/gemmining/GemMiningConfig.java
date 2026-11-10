@@ -11,6 +11,7 @@ import net.runelite.client.config.Range;
 public interface GemMiningConfig extends Config
 {
     String GROUP = "fourtifyGemMining";
+    String RUN = "run";
 
     @ConfigSection(name = "General", description = "Choose a mine and how to store gems.", position = 20, closedByDefault = false)
     String generalSection = "general";
@@ -22,6 +23,12 @@ public interface GemMiningConfig extends Config
     default boolean enableUI()
     {
         return true;
+    }
+
+    @ConfigItem(keyName = RUN, name = "Run", description = "Switch on to start, and off to stop. It switches off whenever the plugin is enabled, so the plugin never starts on its own.", position = 1)
+    default boolean run()
+    {
+        return false;
     }
 
     @ConfigItem(keyName = "mine", name = "Mine", description = "The Shilo Village gem mine to work.", position = 0, section = generalSection)

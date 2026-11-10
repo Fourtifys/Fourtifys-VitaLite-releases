@@ -16,6 +16,14 @@ import org.junit.jupiter.api.Test;
 class GemMiningAPITest
 {
     @Test
+    void theRunSwitchIsOffUntilThePlayerSwitchesItOn()
+    {
+        assertFalse(new GemMiningConfig()
+        {
+        }.run());
+    }
+
+    @Test
     void everyGemLineCountsAndOtherLinesDoNot()
     {
         assertTrue(GemMiningAPI.isGemMessage("You just mined an Opal!"));

@@ -31,8 +31,11 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 )
 public class GemMiningPlugin extends Plugin
 {
+    private static final String STOPPED = "Switch on Run in the settings to start";
     @Inject
     private Client client;
+    @Inject
+    private ConfigManager configManager;
     @Inject
     private OverlayManager overlayManager;
     @Inject
@@ -59,9 +62,8 @@ public class GemMiningPlugin extends Plugin
     @Override
     protected void startUp()
     {
-        start = Instant.now();
-        gems = 0;
-        reset();
+        configManager.setConfiguration(GemMiningConfig.GROUP, GemMiningConfig.RUN, false);
+        stop();
         if (config.enableUI())
         {
             overlayManager.add(overlay);
@@ -72,7 +74,14 @@ public class GemMiningPlugin extends Plugin
     protected void shutDown()
     {
         overlayManager.remove(overlay);
+        stop();
+    }
+
+    private void stop()
+    {
         reset();
+        start = null;
+        status = STOPPED;
     }
 
     private void reset()
@@ -89,9 +98,24 @@ public class GemMiningPlugin extends Plugin
     @Subscribe
     public void onGameTick(GameTick event)
     {
-        step();
-        String runtime = DurationFormatUtils.formatDuration(Duration.between(start, Instant.now()).toMillis(), "HH:mm:ss");
-        overlay.update(runtime, config.mine().toString(), gems, status);
+        if (!config.run())
+        {
+            if (start != null)
+            {
+                stop();
+            }
+        }
+        else
+        {
+            if (start == null)
+            {
+                start = Instant.now();
+                gems = 0;
+            }
+            step();
+        }
+        long millis = start == null ? 0 : Duration.between(start, Instant.now()).toMillis();
+        overlay.update(DurationFormatUtils.formatDuration(millis, "HH:mm:ss"), config.mine().toString(), gems, status);
     }
 
     private void step()
@@ -127,7 +151,7 @@ public class GemMiningPlugin extends Plugin
     @Subscribe
     public void onChatMessage(ChatMessage event)
     {
-        if (event.getType() == ChatMessageType.SPAM || event.getType() == ChatMessageType.GAMEMESSAGE)
+        if (start != null && (event.getType() == ChatMessageType.SPAM || event.getType() == ChatMessageType.GAMEMESSAGE))
         {
             gems += GemMiningAPI.isGemMessage(event.getMessage()) ? 1 : 0;
         }

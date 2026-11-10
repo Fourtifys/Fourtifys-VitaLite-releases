@@ -25,12 +25,12 @@ import net.runelite.api.Skill;
 import net.runelite.api.WorldType;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.ObjectID;
+import net.runelite.api.gameval.VarbitID;
 
 public class GemMiningAPI
 {
     public static final int GEM_ROCK_LEVEL = 40;
     public static final int UNDERGROUND_REGION = 11410;
-    public static final int KARAMJA_MEDIUM_REWARD_VARBIT = 3598;
     public static final int[] GEM_ROCKS = {ObjectID.GEMROCK1, ObjectID.GEMROCK};
     public static final int[] GEMS = {
             ItemID.UNCUT_OPAL,
@@ -118,7 +118,7 @@ public class GemMiningAPI
             return true;
         }
         TileObjectEx ladder = TileObjectAPI.search().withId(ObjectID.ATJUN_LADDER_MULTI).first();
-        return ladder != null ? ladder.hasAction("Climb-down") : VarAPI.getVar(KARAMJA_MEDIUM_REWARD_VARBIT) == 1;
+        return ladder != null ? ladder.hasAction("Climb-down") : VarAPI.getVar(VarbitID.ATJUN_MED_REWARD) == 1;
     }
 
     public static boolean isUnderground()

@@ -15,6 +15,9 @@ the surface mine or the underground mine below it.
 
 ## What it does
 
+Enabling the plugin does not start it. Switch on **Run** at the top of its settings
+to begin, and off to stop. Run switches off again whenever the plugin is enabled.
+
 1. If needed, it climbs the mine ladder to reach the chosen mine.
 2. It walks to the rocks and mines the nearest gem rock in that mine. Each rock gives
    one gem and then needs about a minute to come back.
